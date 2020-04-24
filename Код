@@ -1,0 +1,58 @@
+
+import discord
+from discord.ext import commands
+from discord.utils import get
+
+client = commands.Bot( command_prefix = '!')
+#!help
+
+@client.event
+
+async def on_ready():
+    print( 'Бот Включился ')
+
+    await client.change_presence( status = discord.Status.online, activity = discord.Game('!help бот создан Арсом Изи'))
+
+@client.command( pass_context = True)
+
+async def hello(ctx):
+    await ctx.send( 'Hello')
+#clear message
+@client.command( pass_contex = True )
+@commands.has_permissions( manage_messages = True)
+
+async def clear( ctx, amount = 1000 ):
+    await ctx.channel.purge()
+
+#kick
+@client.command( pass_context = True)
+@commands.has_permissions( kick_members = True)
+
+async def kick( ctx, member: discord.Member, *, reason = ' '):
+    await member.kick( reason = reason)
+
+
+#ban
+@client.command( pass_context = True)
+@commands.has_permissions( ban_members = True)
+
+async def ban( ctx, member: discord.Member, *, reason = ' '):
+    await member.ban( reason = reason)
+
+
+
+#mute
+@client.command()
+@commands.has_permissions(manage_roles = True)
+
+async def mute( ctx, member: discord.Member):
+    mute_role = discord.utils.get( ctx.message.guild.roles, name = 'mute')
+
+    await member.add_roles( mute_role )
+
+
+# Connect
+
+token = open('token.txt', 'r').readline()
+
+client.run(token)
